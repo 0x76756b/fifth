@@ -1,0 +1,74 @@
+;- Demonstrates printing a string to the console.
+   The comment between the two expressions does not affect program execution. -;
+(print("Hello world"))
+
+;- Printing the string again shows that after the comment ends,
+   processing of the source code continues with a regular expression. -;
+(print("Hello world"))
+
+;- The square function accepts x and returns its square.
+   It declares an integer parameter and then multiplies x by itself. -;
+(defun square(
+    let(
+        (int64(x()))
+        )
+    )(
+        (* x x)
+))
+
+;- Defines an enumeration named Axis.
+   Each item represents one coordinate axis: X, Y, or Z.
+   The enum groups these related coordinate names into one type. -;
+(enum Axis(
+    (X())
+    (Y())
+    (Z())
+))
+
+;- Defines a structure named Cords.
+   The structure stores three 64-bit integer coordinates:
+   Point_X, Point_Y, and Point_Z. -;
+(struct Cords(
+    (int64(Point_X()))
+    (int64(Point_Y()))
+    (int64(Point_Z()))
+))
+
+;- The program entry point.
+   It first creates two integer variables, x and y,
+   then calculates and prints the square of each one. -;
+(defun main(
+    (let(
+        (int64(x(5)))
+        (int64(y(6)))
+        )
+    ))(
+
+    (print(
+        (square(x)) "," (square(y) "\n")
+        )
+    )
+
+    ;- The sum of the squares is stored in sqr and published
+       to the outer context of the current block. -;
+    (public(
+        let(
+            (int64(sqr(
+                (+ (square(x)) (square(y)))
+                )))
+            )
+        )
+    )
+
+    ;- Comparing the sum of the squares with 60 selects a message
+       for a greater, lesser, or equal value. -;
+    (if(> sqr 60)(
+        (print("Greater than 60."))
+    )(else(
+        (if(< sqr 60)(
+            (print("Less than 60."))
+        ))
+    )(else(
+        (print("Another value."))
+    ))))
+))

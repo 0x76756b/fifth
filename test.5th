@@ -1,0 +1,11 @@
+(print("Hello, world!"))
+
+(if(> sqr 60)(
+    (print("Greater than 60."))
+)(else(
+    (if(< sqr 60)(
+        (print("Less than 60."))
+    ))
+)(else(
+    (print("Another value."))
+))))
