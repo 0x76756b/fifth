@@ -30,6 +30,8 @@ class main
         STRUCT,
         RIGHTARROW,
         LEFTARROW,
+        WRITE,
+        READ,
         UNKNOWN
     }
 
@@ -68,13 +70,23 @@ class main
         public List<AstNode> Statements = new List<AstNode>();
     }
 
-    public sealed class PrintNode : AstNode
+    public sealed class WriteNode : AstNode
     {
         public AstNode Expression;
 
-        public PrintNode(AstNode expression)
+        public WriteNode(AstNode expression)
         {
             Expression = expression;
+        }
+    }
+
+    public sealed class ReadNode : AstNode
+    {
+        public string Name;
+
+        public ReadNode(string name)
+        {
+            Name = name;
         }
     }
 
@@ -148,16 +160,6 @@ class main
         }
     }
 
-    public sealed class ElseNode : AstNode
-    {
-        public AstNode Body;
-
-        public ElseNode(AstNode body)
-        {
-            Body = body;
-        }
-    }
-
     public sealed class StructNode : AstNode
     {
         public string Name;
@@ -196,7 +198,7 @@ class main
         }
     }
 
-    public static string sourceCode = @"./test.5th";
+    public static string sourceCode = @"./main.5th";
 
     public static void Main()
     {
@@ -499,90 +501,6 @@ class main
 
             if (Current.Type == TokenType.IDENTIFIER)
                 return new IdentifierNode(Advance().Lexeme);
-
-            if (Match(TokenType.LEFTPAREN))
-            {
-                if (Current == null)
-                    throw new InvalidDataException(
-                        "Unclosed expression."
-                    );
-
-                if (Current.Type == TokenType.STRING ||
-                    Current.Type == TokenType.NUMBER ||
-                    Current.Type == TokenType.IDENTIFIER)
-                {
-                    AstNode expression = ParseExpression();
-                    Expect(TokenType.RIGHTPAREN);
-                    return expression;
-                }
-
-                Token operation = Advance();
-
-                if (operation.Type == TokenType.PRINT)
-                {
-                    AstNode argument = ParseExpression();
-
-                    Expect(TokenType.RIGHTPAREN);
-                    Expect(TokenType.RIGHTPAREN);
-
-                    return new PrintNode(argument);
-                }
-
-                if (operation.Type == TokenType.LET)
-                {
-                    Token nameToken = Expect(TokenType.IDENTIFIER);
-                    AstNode value = ParseExpression();
-
-                    Expect(TokenType.RIGHTPAREN);
-
-                    return new LetNode(nameToken.Lexeme, value);
-                }
-
-                if (operation.Type == TokenType.IF)
-                {
-
-                    Expect(TokenType.LEFTPAREN);
-
-                    AstNode condition = ParseExpression();
-                    AstNode thenBranch = ParseExpression();
-                    AstNode elseBranch = null;
-
-                    if (Current != null && Current.Type == TokenType.ELSE)
-                    {
-                        Advance(); // Consume the 'else' token
-                        elseBranch = ParseExpression();
-                        Expect(TokenType.LEFTPAREN);
-                    }
-
-                    Expect(TokenType.RIGHTPAREN);
-
-                    return new IfNode(condition, thenBranch, elseBranch);
-                }
-
-                if (operation.Type == TokenType.PLUS ||
-                    operation.Type == TokenType.MINUS ||
-                    operation.Type == TokenType.STAR ||
-                    operation.Type == TokenType.SLASH ||
-                    operation.Type == TokenType.EQUALS ||
-                    operation.Type == TokenType.RIGHTARROW ||
-                    operation.Type == TokenType.LEFTARROW)
-                {
-                    AstNode left = ParseExpression();
-                    AstNode right = ParseExpression();
-
-                    Expect(TokenType.RIGHTPAREN);
-
-                    return new BinaryNode(
-                        operation.Type,
-                        left,
-                        right
-                    );
-                }
-
-                throw new InvalidDataException(
-                    "Unsupported expression: " + operation.Lexeme
-                );
-            }
 
             throw new InvalidDataException(
                 "Unexpected token: " + Current.Lexeme
