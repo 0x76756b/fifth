@@ -523,6 +523,7 @@ class main
                     AstNode argument = ParseExpression();
 
                     Expect(TokenType.RIGHTPAREN);
+                    Expect(TokenType.RIGHTPAREN);
 
                     return new PrintNode(argument);
                 }
@@ -539,6 +540,9 @@ class main
 
                 if (operation.Type == TokenType.IF)
                 {
+
+                    Expect(TokenType.LEFTPAREN);
+
                     AstNode condition = ParseExpression();
                     AstNode thenBranch = ParseExpression();
                     AstNode elseBranch = null;

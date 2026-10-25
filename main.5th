@@ -1,74 +1,34 @@
-;- Demonstrates printing a string to the console.
-   The comment between the two expressions does not affect program execution. -;
-(print("Hello world"))
+pkg: main
 
-;- Printing the string again shows that after the comment ends,
-   processing of the source code continues with a regular expression. -;
-(print("Hello world"))
+;-comment-;
 
-;- The square function accepts x and returns its square.
-   It declares an integer parameter and then multiplies x by itself. -;
-(defun square(
-    let(
-        (int64(x()))
-        )
-    )(
-        (* x x)
-))
+defun main(){
+    write("Hello world") ;-another comment-;
 
-;- Defines an enumeration named Axis.
-   Each item represents one coordinate axis: X, Y, or Z.
-   The enum groups these related coordinate names into one type. -;
-(enum Axis(
-    (X())
-    (Y())
-    (Z())
-))
+    let int64 number
 
-;- Defines a structure named Cords.
-   The structure stores three 64-bit integer coordinates:
-   Point_X, Point_Y, and Point_Z. -;
-(struct Cords(
-    (int64(Point_X()))
-    (int64(Point_Y()))
-    (int64(Point_Z()))
-))
+    write("Enter number:\n>>>")
+    read(number)
 
-;- The program entry point.
-   It first creates two integer variables, x and y,
-   then calculates and prints the square of each one. -;
-(defun main(
-    (let(
-        (int64(x(5)))
-        (int64(y(6)))
-        )
-    ))(
+    let int64 sqr = my_sqr(number)
 
-    (print(
-        (square(x)) "," (square(y) "\n")
-        )
-    )
+    write(sqr)
 
-    ;- The sum of the squares is stored in sqr and published
-       to the outer context of the current block. -;
-    (public(
-        let(
-            (int64(sqr(
-                (+ (square(x)) (square(y)))
-                )))
-            )
-        )
-    )
+    if(<= sqr 20){
+        write("Less than 20")
+    } else if (>= 20){
+        write("Greater than 20")
+    } else {
+        write("The value is another")
+    }
 
-    ;- Comparing the sum of the squares with 60 selects a message
-       for a greater, lesser, or equal value. -;
-    (if(> sqr 60)(
-        (print("Greater than 60."))
-    )(else(
-        (if(< sqr 60)(
-            (print("Less than 60."))
-        ))
-    )(else(
-        (print("Another value."))
-    ))))
-))
+    for(int8 i = 0; <= i 20; += i 1){
+        write(i)
+    }
+
+}
+
+defun my_sqr(int64 x){
+    ret(* x x)
+}
+
